@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ExConverter</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</head>
+
+<body class="">
+    <center>
+        <h1 class="center jumbotron container-fluid bg-secondary text-white">Online Expression Converter</h1>
+    </center>
+    <div class="container-sm">
+        <form action="/" method="post" class="row">
+            <input class="col-sm form-group form-control m-1" type="text" name="tag" id="">
+            <select class="col-sm form-group form-control m-1" name="ch">
+
+                <option value="1">infix_to_postfix</option>
+                <option value="2">infix_to_prefix</option>
+                <option value="3">postfix_to_infix</option>
+            </select>
+
+            <input class="col-sm form-group form-control btn btn-success m-1" type="submit" value="submit">
+
+        </form>
+        <div class="p-3"></div>
+
+        <div class="jumbotron text-center text-danger display-3"> {{converted}}</div>
+    </div>
+</body>
+
+</html>
