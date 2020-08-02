@@ -18,9 +18,11 @@ import random
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/', methods=["POST"])
 def showConverted():
@@ -30,18 +32,19 @@ def showConverted():
     ch = request.form['ch']
     ch = int(ch)
     try:
-        if ch==1:
+        if ch == 1:
             converted = infix_to_postfix(expression)
-        if ch==2:
+        if ch == 2:
             converted = infix_to_prefix(expression)
-        if ch==3:
+        if ch == 3:
             converted = postfix_to_infix(expression)
-    except: converted = "Error happened"
+    except:
+        converted = "Error happened"
     return render_template('index.html', converted=converted)
 
 
 OPERATORS = set(['+', '-', '*', '/', '(', ')'])
-PRIORITY = {'+':1, '-':1, '*':2, '/':2}
+PRIORITY = {'+': 1, '-': 1, '*': 2, '/': 2}
 
 
 ### INFIX ===> POSTFIX ###
@@ -58,8 +61,10 @@ PRIORITY = {'+':1, '-':1, '*':2, '/':2}
     *The popped stack elements will be written to output. 
 4) Pop the remainder of the stack and write to the output (except left parenthesis)
 '''
+
+
 def infix_to_postfix(formula):
-    stack = [] # only pop when the coming op has priority 
+    stack = []  # only pop when the coming op has priority
     output = ''
     for ch in formula:
         if ch not in OPERATORS:
@@ -69,14 +74,15 @@ def infix_to_postfix(formula):
         elif ch == ')':
             while stack and stack[-1] != '(':
                 output += stack.pop()
-            stack.pop() # pop '('
+            stack.pop()  # pop '('
         else:
             while stack and stack[-1] != '(' and PRIORITY[ch] <= PRIORITY[stack[-1]]:
                 output += stack.pop()
             stack.append(ch)
     # leftover
-    while stack: output += stack.pop()
-    print (output)
+    while stack:
+        output += stack.pop()
+    print(output)
     return output
 
 
@@ -86,6 +92,8 @@ def infix_to_postfix(formula):
 2) When see an operator, pop out two numbers, connect them into a substring and push back to the stack
 3) the top of the stack is the final infix expression.
 '''
+
+
 def postfix_to_infix(formula):
     stack = []
     prev_op = None
@@ -103,7 +111,7 @@ def postfix_to_infix(formula):
                 expr = a + ch + b
             stack.append(expr)
             prev_op = ch
-    print (stack[-1])
+    print(stack[-1])
     return stack[-1]
 
 
@@ -121,23 +129,23 @@ def infix_to_prefix(formula):
                 op = op_stack.pop()
                 a = exp_stack.pop()
                 b = exp_stack.pop()
-                exp_stack.append( op+b+a )
-            op_stack.pop() # pop '('
+                exp_stack.append(op+b+a)
+            op_stack.pop()  # pop '('
         else:
             while op_stack and op_stack[-1] != '(' and PRIORITY[ch] <= PRIORITY[op_stack[-1]]:
                 op = op_stack.pop()
                 a = exp_stack.pop()
                 b = exp_stack.pop()
-                exp_stack.append( op+b+a )
+                exp_stack.append(op+b+a)
             op_stack.append(ch)
-    
+
     # leftover
     while op_stack:
         op = op_stack.pop()
         a = exp_stack.pop()
         b = exp_stack.pop()
-        exp_stack.append( op+b+a )
-    print (exp_stack[-1])
+        exp_stack.append(op+b+a)
+    print(exp_stack[-1])
     return exp_stack[-1]
 
 
@@ -147,6 +155,8 @@ Scan the formula reversely
 1) When the token is an operand, push into stack
 2) When the token is an operator, pop out 2 numbers from stack, merge them and push back to the stack
 '''
+
+
 def prefix_to_infix(formula):
     stack = []
     prev_op = None
@@ -162,7 +172,7 @@ def prefix_to_infix(formula):
                 exp = a+ch+b
             stack.append(exp)
             prev_op = ch
-    print (stack[-1])
+    print(stack[-1])
     return stack[-1]
 
 
@@ -175,6 +185,8 @@ Scan the formula:
 3) Perform the indicated operation on two poped numbers, and push the result back
 4) The final result is the stack top.
 '''
+
+
 def evaluate_postfix(formula):
     stack = []
     for ch in formula:
@@ -183,9 +195,9 @@ def evaluate_postfix(formula):
         else:
             b = stack.pop()
             a = stack.pop()
-            c = {'+':a+b, '-':a-b, '*':a*b, '/':a/b}[ch]
+            c = {'+': a+b, '-': a-b, '*': a*b, '/': a/b}[ch]
             stack.append(c)
-    print (stack[-1])
+    print(stack[-1])
     return stack[-1]
 
 
@@ -195,6 +207,8 @@ def evaluate_infix(formula):
 
 ''' Whenever we see an operator following by two numbers, 
 we can compute the result.'''
+
+
 def evaluate_prefix(formula):
     exps = list(formula)
     while len(exps) > 1:
@@ -202,13 +216,13 @@ def evaluate_prefix(formula):
             if exps[i] in OPERATORS:
                 if not exps[i+1] in OPERATORS and not exps[i+2] in OPERATORS:
                     op, a, b = exps[i:i+3]
-                    a,b = map(float, [a,b])
-                    c = {'+':a+b, '-':a-b, '*':a*b, '/':a/b}[op]
+                    a, b = map(float, [a, b])
+                    c = {'+': a+b, '-': a-b, '*': a*b, '/': a/b}[op]
                     exps = exps[:i] + [c] + exps[i+3:]
                     break
-        print (exps)
+        print(exps)
     return exps[-1]
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
